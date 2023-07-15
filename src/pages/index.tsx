@@ -2,10 +2,11 @@ import React from 'react'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { TbSocial } from 'react-icons/tb'
-import { BiHomeCircle, BiSearchAlt2, BiSolidEnvelope } from 'react-icons/bi'
+import { BiHomeCircle, BiSearchAlt2, BiSolidEnvelope, BiDotsHorizontalRounded } from 'react-icons/bi'
 import { IoMdNotifications } from 'react-icons/io'
 import { BsBookmarksFill } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
+import FeedCard from '@/components/FeedCard'
 const inter = Inter({ subsets: ['latin'] })
 
 interface AppSideBar {
@@ -25,15 +26,22 @@ const AppSideBarItems: AppSideBar[] = [
   {
     title: "Notifications",
     icon: <IoMdNotifications />
-  }, {
+  }, 
+  {
     title: "Messages",
     icon: <BiSolidEnvelope />
-  }, {
+  }, 
+  {
     title: "Bookmarks",
     icon: <BsBookmarksFill />
-  }, {
+  }, 
+  {
     title: "Profile",
     icon: <CgProfile />
+  },
+  {
+    title: "More",
+    icon: <BiDotsHorizontalRounded />
   },
 ]
 
@@ -43,7 +51,7 @@ export default function Home() {
     <div className={inter.className}>
       <div className='grid grid-cols-12 h-screen w-screen px-32'>
         <div className='col-span-3 '>
-          <div className='ml-[-5px] text-3xl text-blue-600 flex flex-row items-center gap-4 mt-4 p-2 hover:bg-gray-200 h-fit w-fit rounded-full transition-all'>
+          <div className='ml-[-5px] text-3xl text-blue-600 flex flex-row items-center gap-4 mt-1 p-2 hover:bg-gray-100 h-fit w-fit rounded-full transition-all'>
             <TbSocial />
           </div>
           <div>
@@ -64,8 +72,23 @@ export default function Home() {
             <button className='bg-blue-500 text-xl p-3 text-white w-full rounded-full'>Post</button>
           </div>
         </div>
-        <div className='col-span-6 border-l-2 border-r-2 border-gray-600 dark:border-gray-400'></div>
-        <div className='col-span-3 '></div>
+        <div className='col-span-5 border-l-2 border-r-2 h-screen overflow-scroll no-scrollbar border-gray-200 dark:border-gray-400'>
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+         <FeedCard />
+        </div>
+        <div className='col-span-4 '></div>
       </div>
     </div>
   )
