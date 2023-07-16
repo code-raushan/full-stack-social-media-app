@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import {toast} from 'react-hot-toast'
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { TbSocial } from "react-icons/tb";
 import {
@@ -57,13 +58,14 @@ export default function Home() {
   const handleGoogleLogin =  useCallback(async(cred:CredentialResponse)=>{
     const googleToken = cred.credential;
     if(!googleToken) throw new Error('token does not exist');
+    
     // sending the graphql request to the backend server, with the token that we have received from google oauth2
     const {verifyGoogleToken} = await graphqlClient.request(VerifyGoogleToken, {token: googleToken});
     console.log(verifyGoogleToken);
+    toast.success("User Signed In");
     if(verifyGoogleToken){
       window.localStorage.setItem("__app_token", verifyGoogleToken);
     }
-
   }, [])
   return (
     <div className={inter.className}>
