@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npm run codegen\" next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@react-oauth/google": "^0.11.0",
@@ -15,6 +16,8 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "eslint-config-next": "13.4.10",
+    "graphql": "^16.7.1",
+    "graphql-request": "^6.1.0",
     "next": "13.4.10",
     "postcss": "8.4.26",
     "react": "18.2.0",
@@ -24,6 +27,10 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@graphql-codegen/introspection": "4.0.0",
+    "concurrently": "^8.2.0",
     "eslint": "^8.45.0"
   }
 }

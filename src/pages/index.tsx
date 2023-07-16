@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { TbSocial } from "react-icons/tb";
 import {
   BiHomeCircle,
@@ -13,6 +13,8 @@ import { IoMdNotifications } from "react-icons/io";
 import { BsBookmarksFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import FeedCard from "@/components/FeedCard";
+import { graphqlClient } from "@/clients/api";
+import { VerifyGoogleToken } from "@/graphql/query/user";
 const inter = Inter({ subsets: ["latin"] });
 
 interface AppSideBar {
@@ -52,6 +54,17 @@ const AppSideBarItems: AppSideBar[] = [
 ];
 
 export default function Home() {
+  const handleGoogleLogin =  useCallback(async(cred:CredentialResponse)=>{
+    const googleToken = cred.credential;
+    if(!googleToken) throw new Error('token does not exist');
+    // sending the graphql request to the backend server, with the token that we have received from google oauth2
+    const {verifyGoogleToken} = await graphqlClient.request(VerifyGoogleToken, {token: googleToken});
+    console.log(verifyGoogleToken);
+    if(verifyGoogleToken){
+      window.localStorage.setItem("__app_token", verifyGoogleToken);
+    }
+
+  }, [])
   return (
     <div className={inter.className}>
       <div className="grid grid-cols-12 h-screen w-screen px-32">
@@ -97,7 +110,7 @@ export default function Home() {
         <div className="col-span-4 ">
           <div className=" px-4 py-8 space-y-2">
             <h1 className="font-semibold">New to Socialo?</h1>
-            <GoogleLogin onSuccess={(cred) => console.log(cred)} />
+            <GoogleLogin onSuccess={handleGoogleLogin} />
           </div>
         </div>
       </div>
