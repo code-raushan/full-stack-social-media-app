@@ -17,6 +17,7 @@ import FeedCard from "@/components/FeedCard";
 import { graphqlClient } from "@/clients/api";
 import { VerifyGoogleToken } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/currentUser";
+import { useQueryClient } from "@tanstack/react-query";
 const inter = Inter({ subsets: ["latin"] });
 
 interface AppSideBar {
@@ -56,7 +57,8 @@ const AppSideBarItems: AppSideBar[] = [
 ];
 
 export default function Home() {
-  const {user} = useCurrentUser()
+  const {user} = useCurrentUser();
+  const queryClient = useQueryClient()
   const handleGoogleLogin =  useCallback(async(cred:CredentialResponse)=>{
     const googleToken = cred.credential;
     console.log(googleToken)
@@ -69,7 +71,8 @@ export default function Home() {
     if(verifyGoogleToken){
       window.localStorage.setItem("__app_token", verifyGoogleToken);
     }
-  }, [])
+    await queryClient.invalidateQueries(["CURRENT_USER"]);
+  }, [queryClient])
   return (
     <div className={inter.className}>
       <div className="grid grid-cols-12 h-screen w-screen px-32">
