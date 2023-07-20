@@ -16,6 +16,7 @@ import { CgProfile } from "react-icons/cg";
 import FeedCard from "@/components/FeedCard";
 import { graphqlClient } from "@/clients/api";
 import { VerifyGoogleToken } from "@/graphql/query/user";
+import { useCurrentUser } from "@/hooks/currentUser";
 const inter = Inter({ subsets: ["latin"] });
 
 interface AppSideBar {
@@ -55,8 +56,10 @@ const AppSideBarItems: AppSideBar[] = [
 ];
 
 export default function Home() {
+  const {user} = useCurrentUser()
   const handleGoogleLogin =  useCallback(async(cred:CredentialResponse)=>{
     const googleToken = cred.credential;
+    console.log(googleToken)
     if(!googleToken) throw new Error('token does not exist');
     
     // sending the graphql request to the backend server, with the token that we have received from google oauth2
@@ -110,10 +113,10 @@ export default function Home() {
           <FeedCard />
         </div>
         <div className="col-span-4 ">
-          <div className=" px-4 py-8 space-y-2">
+          {!user && <div className=" px-4 py-8 space-y-2">
             <h1 className="font-semibold">New to Socialo?</h1>
             <GoogleLogin onSuccess={handleGoogleLogin} />
-          </div>
+          </div>}
         </div>
       </div>
     </div>
