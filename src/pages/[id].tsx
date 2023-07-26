@@ -1,12 +1,20 @@
 import { useRouter } from "next/router";
 import AppLayout from "@/components/Layouts/AppLayout";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { BsArrowLeftShort } from "react-icons/bs";
 import Image from "next/image";
 import { useCurrentUser } from "@/hooks/currentUser";
 import FeedCard from "@/components/FeedCard";
-import { Post } from "@/gql/graphql";
-const UserProfilePage: NextPage = ()=>{
+import { Post, User } from "@/gql/graphql";
+import { graphqlClient } from "@/clients/api";
+import { getUserByIdQuery } from "@/graphql/query/user";
+
+
+interface ServerProps {
+    user?: User
+}
+
+const UserProfilePage: NextPage<ServerProps> = ()=>{
     const router = useRouter();
     const {user} = useCurrentUser();
     return (
@@ -36,4 +44,20 @@ const UserProfilePage: NextPage = ()=>{
         </div>
     )
 }
+
+export const getServerSideProps: GetServerSideProps = async(context)=>{
+    const id = context.query.id as string | undefined;
+    if(!id) return {notFound: true, props: {user: undefined}}
+    const userInfo = await graphqlClient.request(getUserByIdQuery, {id});
+
+    if(!userInfo?.getUserById) return {notFound: true}
+
+    console.log(id);
+    return {
+        props:{
+            userInfo: userInfo.getUserById as User
+        }
+    }
+}
+
 export default UserProfilePage
