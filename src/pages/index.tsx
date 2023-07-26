@@ -11,11 +11,18 @@ import { useCurrentUser } from "@/hooks/currentUser";
 import { useCreatePost, useGetAllPosts } from "@/hooks/post";
 import { Post } from "@/gql/graphql";
 import AppLayout from "@/components/Layouts/AppLayout";
+import { GetServerSideProps } from "next";
+import { graphqlClient } from "@/clients/api";
+import { getAllPostsQuery } from "@/graphql/query/post";
 
 const inter = Inter({ subsets: ["latin"] });
 
+interface HomeProps{
+  posts: Post[];
+}
 
-export default function Home() {
+
+export default function Home(props: HomeProps) {
   const { user } = useCurrentUser();
   const { posts = [] } = useGetAllPosts();
 
@@ -42,6 +49,8 @@ export default function Home() {
     input.setAttribute("accept", "image/*");
     input.click();
   }, []);
+
+ 
   return (
     <div className={inter.className}>
       <AppLayout>
@@ -85,12 +94,21 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {posts &&
-            posts.map((post) =>
+          {props.posts &&
+            props.posts.map((post) =>
               post ? <FeedCard key={post?.id} data={post as Post} /> : null
             )}
         </div>
       </AppLayout>
     </div>
   );
+}
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context)=>{
+  const allPosts = await graphqlClient.request(getAllPostsQuery);
+  return {
+    props: {
+      posts: allPosts.getAllPosts as Post[]
+    }
+  }
 }

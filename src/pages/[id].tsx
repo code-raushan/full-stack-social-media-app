@@ -8,6 +8,7 @@ import FeedCard from "@/components/FeedCard";
 import { Post, User } from "@/gql/graphql";
 import { graphqlClient } from "@/clients/api";
 import { getUserByIdQuery } from "@/graphql/query/user";
+import Link from "next/link";
 
 
 interface ServerProps {
@@ -16,13 +17,15 @@ interface ServerProps {
 
 const UserProfilePage: NextPage<ServerProps> = (props)=>{
     const router = useRouter();
-    const {user} = useCurrentUser();
+    const {user:currentUser} = useCurrentUser();
     return (
         <div>
             <AppLayout>
                 <div>
                     <nav className="flex items-center gap-3 py-3 px-3">
-                        <BsArrowLeftShort className="text-4xl" />
+                        <Link href={'/'}>
+                            <BsArrowLeftShort className="text-4xl" />
+                        </Link>
                         <div>
                             <h1 className="text-2xl font-bold">
                                 {props.user?.firstName} {props.user?.lastName}

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { BsChat } from "react-icons/bs";
 import { AiOutlineRetweet, AiOutlineHeart } from "react-icons/ai";
@@ -18,7 +19,7 @@ const FeedCard: FC<Props> = (props) => {
           {data.author?.profileImg && (
             <Image
               src={data.author?.profileImg}
-              alt="user-mage"
+              alt="user-image"
               height={50}
               width={50}
               className="rounded-full"
@@ -27,7 +28,9 @@ const FeedCard: FC<Props> = (props) => {
         </div>
         <div className="col-span-11">
           <p className="font-semibold">
-            {data.author?.firstName} {data.author?.lastName}
+            <Link href={`/${data.author?.id}`}>
+              {data.author?.firstName} {data.author?.lastName}
+            </Link>
           </p>
           <p>{data.content}</p>
           <div className="flex flex-row justify-between mt-4 pr-12">

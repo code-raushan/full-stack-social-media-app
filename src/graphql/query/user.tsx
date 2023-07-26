@@ -22,9 +22,7 @@ export const useCurrentUserInfo = graphql(`#graphql
                     firstName
                     lastName
                     profileImg
-                    
-                }
-                
+                } 
             }
         }
     }
@@ -46,7 +44,6 @@ export const getUserByIdQuery = graphql(`#graphql
                     firstName
                     lastName
                     profileImg
-                    
                 }
             }
         }
