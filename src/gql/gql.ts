@@ -16,7 +16,7 @@ const documents = {
     "#graphql \n    mutation Mutation($payload: CreatePostData!) {\n        createPost(payload: $payload) {\n            id\n        }     \n    }      \n": types.MutationDocument,
     "#graphql\n    query GetAllPosts {\n\n        getAllPosts {\n        id\n        content\n        imageURL\n        author {\n            firstName\n            lastName\n            profileImg\n        }\n        }\n}\n \n\n": types.GetAllPostsDocument,
     "#graphql\n    query VerifyGoogleTokenQuery($token: String!) {\n        verifyGoogleToken(token: $token)\n}\n": types.VerifyGoogleTokenQueryDocument,
-    "#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n    }\n}\n": types.GetCurrentUserDocument,
+    "#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n            posts {\n                id\n                imageURL\n                content\n                author {\n                    id\n                    firstName\n                    lastName\n                    profileImg\n                    \n                }\n                \n            }\n        }\n    }\n": types.GetCurrentUserDocument,
 };
 
 /**
@@ -48,7 +48,7 @@ export function graphql(source: "#graphql\n    query VerifyGoogleTokenQuery($tok
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n    }\n}\n"): (typeof documents)["#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n    }\n}\n"];
+export function graphql(source: "#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n            posts {\n                id\n                imageURL\n                content\n                author {\n                    id\n                    firstName\n                    lastName\n                    profileImg\n                    \n                }\n                \n            }\n        }\n    }\n"): (typeof documents)["#graphql\n    query GetCurrentUser{\n        getCurrentUser{\n            id\n            email\n            firstName\n            lastName\n            profileImg\n            posts {\n                id\n                imageURL\n                content\n                author {\n                    id\n                    firstName\n                    lastName\n                    profileImg\n                    \n                }\n                \n            }\n        }\n    }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

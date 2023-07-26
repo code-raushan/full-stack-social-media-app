@@ -13,7 +13,20 @@ export const useCurrentUserInfo = graphql(`#graphql
             firstName
             lastName
             profileImg
+            posts {
+                id
+                imageURL
+                content
+                author {
+                    id
+                    firstName
+                    lastName
+                    profileImg
+                    
+                }
+                
+            }
+        }
     }
-}
 `
 )

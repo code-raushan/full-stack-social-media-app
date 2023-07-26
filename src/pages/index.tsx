@@ -10,7 +10,7 @@ import FeedCard from "@/components/FeedCard";
 import { useCurrentUser } from "@/hooks/currentUser";
 import { useCreatePost, useGetAllPosts } from "@/hooks/post";
 import { Post } from "@/gql/graphql";
-import AppLayout from "@/Layouts/AppLayout";
+import AppLayout from "@/components/Layouts/AppLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <div className={inter.className}>
       <AppLayout>
-        <div className="col-span-5 border-l-2 border-r-2 h-screen overflow-scroll no-scrollbar border-gray-200 dark:border-gray-400">
+        <div className="col-span-5 border-l-1 border-r-1 h-screen overflow-scroll no-scrollbar border-gray-200 dark:border-gray-400">
           <div className="border px-2 py-4">
             <div className="grid grid-cols-12 space-x-2">
               <div className="col-span-1 rounded-full">
