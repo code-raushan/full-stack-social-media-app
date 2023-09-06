@@ -33,6 +33,7 @@ const FeedCard: FC<Props> = (props) => {
             </Link>
           </p>
           <p>{data.content}</p>
+          {data.imageURL && (<Image src={data.imageURL} height={400} width={400} alt={"post-image"}/>)}
           <div className="flex flex-row justify-between mt-4 pr-12">
             <div className="cursor-pointer">
               <BsChat />

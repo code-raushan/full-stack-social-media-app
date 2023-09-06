@@ -1,4 +1,4 @@
-import {graphql} from '../../gql'
+import { graphql } from '../../gql'
 export const getAllPostsQuery = graphql(`#graphql
     query GetAllPosts {
 
@@ -14,6 +14,11 @@ export const getAllPostsQuery = graphql(`#graphql
         }
         }
 }
- 
+`);
 
-`) 
+export const getSignedURLForPostQuery = graphql(`
+    
+    query GetSignedURL($imageName: String!, $imageType: String!) {
+    getSignedURLForPost(imageName: $imageName, imageType: $imageType)
+    }
+`)

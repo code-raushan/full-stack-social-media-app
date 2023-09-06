@@ -2,7 +2,8 @@ import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { toast } from "react-hot-toast";
-
+import axios from "axios";
+import {AiOutlineCloseCircle} from 'react-icons/ai'
 import { GoFileMedia } from "react-icons/go";
 
 import FeedCard from "@/components/FeedCard";
@@ -13,7 +14,7 @@ import { Post } from "@/gql/graphql";
 import AppLayout from "@/components/Layouts/AppLayout";
 import { GetServerSideProps } from "next";
 import { graphqlClient } from "@/clients/api";
-import { getAllPostsQuery } from "@/graphql/query/post";
+import { getAllPostsQuery, getSignedURLForPostQuery } from "@/graphql/query/post";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ interface HomeProps{
 
 
 export default function Home(props: HomeProps) {
+  const [imageURL, setImageURL]=useState("")
   const { user } = useCurrentUser();
   const { posts = [] } = useGetAllPosts();
 
@@ -34,21 +36,56 @@ export default function Home(props: HomeProps) {
     if (user) {
       mutate({
         content,
+        imageURL
       });
-      setContent("")
+      setContent("");
+      setImageURL("");
     } else {
       toast.error('Not Authenticated!')
       setContent("")
     }
-  }, [user, content, mutate]);
+  }, [user, mutate, content, imageURL]);
 
+  const handleInputChangeFile = useCallback((input: HTMLInputElement)=>{
+    return async (event: Event)=>{
+      event.preventDefault();
+      // console.log(input.files);
+      const file:File | null | undefined = input.files?.item(0);
+      if(!file) return;
+      console.log(file)
+
+      const {getSignedURLForPost} = await graphqlClient.request(getSignedURLForPostQuery, {
+        imageName: file.name,
+        imageType: file.type
+      });
+
+      if(getSignedURLForPost){
+        toast.loading("Uploading...", {id: "2"});
+        await axios.put(getSignedURLForPost, file, {
+          headers:{
+            "Content-Type": file.type,
+          }
+        });
+        toast.success("Upload Completed", {id: "2"});
+        const url = new URL(getSignedURLForPost);
+        const filePath = `${url.origin}${url.pathname}`;
+        console.log(filePath);
+        setImageURL(filePath);
+      }
+    }
+  }, []);
 
   const handleImgUpload = useCallback(() => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
+
+    const handlerFn = handleInputChangeFile(input);
+
+    input.addEventListener("change", handlerFn);
+
     input.click();
-  }, []);
+  }, [handleInputChangeFile]);
 
  
   return (
@@ -76,6 +113,15 @@ export default function Home(props: HomeProps) {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
+                {imageURL && (
+                    <Image
+                    src={imageURL}
+                    alt="tweet-image"
+                    width={300}
+                    height={300}
+                  />
+                )}
+                
                 <div className="flex justify-between px-2 py-1 items-center">
                   <div className="text-blue-600 text-lg">
                     <div>
