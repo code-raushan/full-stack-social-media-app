@@ -26,15 +26,15 @@ interface HomeProps{
 export default function Home(props: HomeProps) {
   const [imageURL, setImageURL]=useState("")
   const { user } = useCurrentUser();
-  const { posts = [] } = useGetAllPosts();
+  const { posts = props.posts as Post[] } = useGetAllPosts();
 
-  const { mutate } = useCreatePost();
+  const { mutateAsync } = useCreatePost();
 
   const [content, setContent] = useState("");
 
   const handlePostCreate = useCallback(async () => {
     if (user) {
-      mutate({
+      await mutateAsync({
         content,
         imageURL
       });
@@ -44,7 +44,7 @@ export default function Home(props: HomeProps) {
       toast.error('Not Authenticated!')
       setContent("")
     }
-  }, [user, mutate, content, imageURL]);
+  }, [user, mutateAsync, content, imageURL]);
 
   const handleInputChangeFile = useCallback((input: HTMLInputElement)=>{
     return async (event: Event)=>{
@@ -140,8 +140,8 @@ export default function Home(props: HomeProps) {
               </div>
             </div>
           </div>
-          {props.posts &&
-            props.posts.map((post) =>
+          {posts &&
+            posts.map((post) =>
               post ? <FeedCard key={post?.id} data={post as Post} /> : null
             )}
         </div>
